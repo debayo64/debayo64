@@ -1,0 +1,44 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import re
+
+# Set up the ChromeDriver
+Path = "C:\\Python.py\\Dataset"
+File = 'chromedriver.exe'
+URL = "https://www.wikipedia.org/"
+browser = webdriver.Chrome(Path + File)
+browser.get(URL)
+
+# Give the browser time to load all content.
+time.sleep(1)
+
+# Search for content
+SEARCH_TERM = "Professor"
+search_box = browser.find_element(By.CSS_SELECTOR, ".svg-search-icon , #searchInput")
+search_box.send_keys(SEARCH_TERM)
+button = browser.find_element_by_css_selector("button")
+button.click()
+
+# Wait for search results to load
+time.sleep(3)
+
+# Extract and print content from three pages
+for page_num in range(1, 4):
+    content_elements = browser.find_elements(By.CSS_SELECTOR, ".mw-search-result")
+
+    for content_element in content_elements:
+        text_content = content_element.get_attribute('innerHTML')
+
+        # Use BeautifulSoup to remove HTML tags
+        soup = BeautifulSoup(text_content, features="lxml")
+        raw_string = soup.get_text().strip()
+
+        # Remove hidden characters for tabs and new lines.
+        raw_string = re.sub(r"[\n\t]*", "", raw_string)
+
+        # Replace two or more consecutive empty spaces with '*'
+        raw_string = re.sub('[ ]{2,}', '*', raw_string)
+        print(raw_string)
+        print("***")
