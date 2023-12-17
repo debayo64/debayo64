@@ -1,0 +1,73 @@
+def getStock(stkInput, dayInput):
+    dt = datetime.date.today()
+    dtPast = dt + datetime.timedelta(days=-dayInput)
+
+    # Call Yahoo finance to get stock data for the stock provided.
+    dfStock = yf.download(stkInput, start=dtPast, end=dt)
+    return dfStock
+
+
+def removeTime(df):
+    newDateList = []
+    dateList = list(df.index.values)
+    print(dateList)
+    for i in range(0, len(dateList)):
+        dateStr = str(dateList[i])
+        itemList = dateStr.split("T")
+        print(itemList)
+        newDateList.append(itemList[0])
+    df["Date"] = newDateList
+    print(df)
+    df.set_index("Date", inplace=True)
+
+
+df = getStock("AAPL", 5)
+print("Original Data\n", df)
+
+removeTime(df)
+print("Cleaned Data\n", df)
+
+while True:
+    optionValue = int(input("Type your option: (1 or 2)"))
+    if optionValue == 1:
+        stockSymbol = input("What is stock symbol: ")
+        days = int(input("How many days: "))
+        getStock(stockSymbol, days)
+    elif optionValue == 2:
+        print("Goodbye")
+        break
+    else:
+        print("Wrong option, try again")
+
+import datetime
+
+import yfinance as yf
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 1000)
+
+for i in range(0, len(df)):
+    Celsius = df.iloc[i]['Temperature']
+    df.iat[i, df.columns.get_loc('Fahrenheit')] = Celsius * 9.0 / 5.0 + 32
+
+print("\nDataFrame after changed to Fahrenheit:")
+# Remove the 'Temperature' column
+newColumnList = ['City', 'Fahrenheit']
+df = df[newColumnList]
+print(df)
+
+df
+Apple = getStock("AAPL")
+print(df
+Apple)
+numRows = Len(df
+Apple)
+print("\nshowing the most recent closing price")
+print(df
+Apple.dow[numRows - 1]['close'])
+
+df_apple = getStock("AAPL")
+print(df_apple)
+num_rows = len(df_apple)
+print("\nShowing the most recent closing price:")
+print(df_apple.iloc[num_rows - 1]['close'])
