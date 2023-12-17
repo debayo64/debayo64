@@ -1,0 +1,34 @@
+import datetime
+
+import yfinance as yf
+
+
+def getStock(stkInput, dayInput):
+    dt = datetime.date.today()
+    dtPast = dt + datetime.timedelta(days=-dayInput)
+
+    # Call Yahoo finance to get stock data for the stock provided.
+    dfStock = yf.download(stkInput, start=dtPast, end=dt)
+    return dfStock
+
+
+def removeTime(df):
+    newDateList = []
+    dateList = list(df.index.values)
+    print(dateList)
+    for i in range(0, len(dateList)):
+        dateStr = str(dateList[i])
+        itemList = dateStr.split("T")
+        print(itemList)
+        newDateList.append(itemList[0])
+    df["Date"] = newDateList
+    print(df)
+    df.set_index("Date", inplace=True)
+
+
+df = getStock("AAPL", 5)
+
+print("Original Data\n", df)
+
+removeTime(df)
+print("Cleaned Data\n", df)
