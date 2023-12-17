@@ -1,0 +1,42 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Set up the ChromeDriver
+Path = "C:\\Python.py\\Dataset"
+File = 'chromedriver.exe'
+URL = "https://www.reddit.com/"
+browser = webdriver.Chrome(Path + "\\" + File)
+browser.get(URL)
+
+# Give the browser time to load all content.
+time.sleep(2)
+
+# Scrape content (names and votes)
+post_elements = browser.find_elements(By.CSS_SELECTOR, '.scrollerItem')
+
+# Lists to store scraped data
+post_titles = []
+post_upvotes = []
+
+# Extract and print content
+for post_element in post_elements:
+    # Extract post title
+    title_element = post_element.find_element(By.CSS_SELECTOR, 'h3')
+    post_title = title_element.text
+    post_titles.append(post_title)
+
+    # Extract upvotes (assuming it's in a span with class 'score')
+    upvote_element = post_element.find_element(By.CSS_SELECTOR, '.score')
+    post_upvotes.append(upvote_element.text)
+
+# Create a DataFrame from the scraped data
+df = pd.DataFrame({'Post Title': post_titles, 'Upvotes': post_upvotes})
+
+# Display the DataFrame
+print(df)
+
+# Close the browser
+browser.quit()
